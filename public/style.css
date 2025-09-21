@@ -1,0 +1,329 @@
+/* Basic Reset & Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Hide scrollbars that might appear from the video */
+}
+
+/* Video Background */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover; /* Cover the entire screen */
+}
+
+/* Login Container - The "Glass" */
+.login-container {
+    width: 420px;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px); /* The key glassmorphism property */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.login-form h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Input Groups with Floating Labels */
+.input-group {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-group input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 20px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Floating label effect */
+.input-group label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #fff;
+    pointer-events: none;
+    transition: .3s ease-out;
+}
+
+/* Animate label when input is focused or has content */
+.input-group input:focus + label,
+.input-group input:valid + label {
+    top: -10px;
+    font-size: 12px;
+    color: #eee;
+}
+
+.input-group input:focus {
+    border-color: #a77eff; /* Highlight color on focus */
+    box-shadow: 0 0 15px rgba(167, 126, 255, 0.7); /* Glowing animation */
+}
+
+/* Options like "Forgot Password" */
+.options {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.options a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.options a:hover {
+    text-decoration: underline;
+}
+
+/* Login Button */
+button {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+    background-color: #a77eff;
+    color: #fff;
+}
+
+/* Register Link */
+.register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-link p a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+
+/* --- Home Page Styles: iOS Inspired --- */
+
+/* Bottom Navbar Container */
+.bottom-navbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    /* Glassmorphism for Bottom Navbar */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 50px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    position: relative; /* Crucial for the indicator positioning */
+}
+
+.nav-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 70px;
+    padding: 0 5px; /* Add horizontal padding for better spacing */
+    height: 50px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    z-index: 2; /* Ensure text is above the indicator */
+    transition: color 0.3s;
+}
+
+.nav-item i {
+    font-size: 20px;
+}
+
+.nav-item span {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* The animated indicator */
+.nav-indicator {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: #a77eff;
+    border-radius: 50px;
+    z-index: 1;
+    transition: all 0.35s ease-in-out; /* Smoother transition */
+}
+
+/* Main Content Container on Home Page */
+.content-container {
+    text-align: center;
+    width: 600px;
+    max-width: 90vw;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.content-container h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.content-container p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* --- Profile Page Specific Styles --- */
+.profile-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 600px;
+    max-width: 90vw;
+}
+
+.profile-card {
+    /* Re-using the glassmorphism effect */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 25px 30px;
+}
+
+.profile-card h2 {
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.profile-card p {
+    line-height: 1.6;
+}
+
+.danger-zone {
+    background: rgba(255, 50, 50, 0.1);
+    border-color: rgba(255, 50, 50, 0.2);
+}
+
+.danger-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    margin-top: 15px;
+}
+
+.danger-btn:hover {
+    background-color: #c0392b;
+}
+
+.form-message {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+}
+.form-message.error { color: #ff9a9a; }
+.form-message.success { color: #a7ffba; }
+
+/* --- Side Navbar Styles (for Profile, etc.) --- */
+
+/* Add padding to the body to make space for the side nav */
+body.has-side-nav {
+    padding-left: 120px;
+}
+
+.side-navbar {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    z-index: 1000;
+
+    /* Glassmorphism */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 50px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.side-navbar .nav-links {
+    flex-direction: column; /* Stack items vertically */
+}
+
+.side-navbar .nav-item a {
+    height: 70px; /* Make items more square for a better vertical look */
+}
+
+.side-navbar .nav-indicator {
+    left: 0;
+    width: 100%;
+}

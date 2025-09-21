@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Glassmorphism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758452452/bubbleLoop_v7jqn8.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <main class="content-container">
+        <h1>Welcome Home</h1>
+        <p>This is your personalized dashboard. The glassmorphism theme is consistent across the application, providing a modern and sleek user experience.</p>
+        <p>The navigation bar below is styled after modern mobile OS designs, featuring a floating glass effect and an interactive indicator.</p>
+    </main>
+
+    <footer class="bottom-navbar">
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="/home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span>Profile</span></a></li>
+                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+                <div class="nav-indicator"></div>
+            </ul>
+        </nav>
+    </footer>
+
+    <script src="/home.js" defer></script>
+</body>
+</html>

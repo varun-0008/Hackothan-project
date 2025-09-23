@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant | Glassmorphism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="has-side-nav">
+    <video autoplay muted loop id="bg-video">
+        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758532387/background_video_nx9nfc.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <main class="profile-page-container">
+        <div class="profile-card chat-card">
+            <h2 data-i18n="aiAgriAssistant">AI Agri-Assistant</h2>
+            <div class="chat-window" id="chat-window">
+                <!-- AI's welcome message -->
+                <div class="chat-message ai-message">
+                    <p data-i18n="aiWelcome">Hello! How can I help you with your farming questions today?</p>
+                </div>
+            </div>
+            <form class="chat-input-form" id="chat-form">
+                <div class="input-group">
+                    <input type="text" id="chat-input" data-i18n-placeholder="typeYourQuestion" autocomplete="off" required>
+                    <button type="button" id="mic-btn" class="chat-btn"><i class="fas fa-microphone"></i></button>
+                    <button type="submit" class="chat-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <aside class="side-navbar">
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="/home.html"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a></li>
+                <li class="nav-item"><a href="/market.html"><i class="fa-solid fa-store"></i><span data-i18n="navMarket">Market</span></a></li>
+                <li class="nav-item"><a href="/crop.html"><i class="fa-solid fa-seedling"></i><span data-i18n="navCrops">Crops</span></a></li>
+                <li class="nav-item active"><a href="/chat.html"><i class="fa-solid fa-comments"></i><span data-i18n="navAIChat">AI Chat</span></a></li>
+                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span data-i18n="navProfile">Profile</span></a></li>
+                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="navLogout">Logout</span></a></li>
+                <div class="nav-indicator"></div>
+            </ul>
+        </nav>
+    </aside>
+    <script src="/i18n.js" defer></script>
+    <script src="/chat.js" defer></script>
+</body>
+</html>

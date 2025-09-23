@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Crops | Glassmorphism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="has-side-nav">
+    <video autoplay muted loop id="bg-video">
+        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758532387/background_video_nx9nfc.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <main class="profile-page-container">
+        <div class="profile-card">
+            <h2 data-i18n="addCropDetails">Add New Crop Details</h2>
+            <form id="crop-form">
+                <div class="input-group">
+                    <input type="text" id="crop-name" required>
+                    <label for="crop-name" data-i18n="cropName">Crop Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="crop-variety" required>
+                    <label for="crop-variety" data-i18n="variety">Variety</label>
+                </div>
+                <div class="input-group">
+                    <input type="date" id="sowing-date" required>
+                    <label for="sowing-date" data-i18n="sowingDate">Sowing Date</label>
+                </div>
+                <div class="input-group">
+                    <input type="date" id="harvest-date" required>
+                    <label for="harvest-date" data-i18n="harvestDate">Expected Harvest Date</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="land-area" step="0.01" required>
+                    <label for="land-area" data-i18n="landArea">Land Area (in acres)</label>
+                </div>
+                <div class="input-group">
+                    <select id="soil-type" required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="Alluvial Soil">Alluvial Soil</option>
+                        <option value="Black Soil">Black Soil</option>
+                        <option value="Red Soil">Red Soil</option>
+                        <option value="Laterite Soil">Laterite Soil</option>
+                        <option value="Arid Soil">Arid Soil</option>
+                    </select>
+                    <label for="soil-type" data-i18n="soilType">Soil Type</label>
+                </div>
+                <div class="input-group">
+                     <select id="irrigation-method" required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="Drip Irrigation">Drip Irrigation</option>
+                        <option value="Sprinkler Irrigation">Sprinkler Irrigation</option>
+                        <option value="Canal/Flood Irrigation">Canal/Flood Irrigation</option>
+                        <option value="Rain-fed">Rain-fed</option>
+                    </select>
+                    <label for="irrigation-method" data-i18n="irrigationMethod">Irrigation Method</label>
+                </div>
+                <button type="submit" data-i18n="getAIFeedback">Get AI Feedback</button>
+                <p class="form-message" id="crop-message"></p>
+            </form>
+        </div>
+        <div class="profile-card">
+            <h2 data-i18n="aiFeedback">AI Feedback</h2>
+            <div id="ai-feedback-box"></div>
+        </div>
+    </main>
+
+    <aside class="side-navbar">
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="/home.html"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a></li>
+                <li class="nav-item"><a href="/market.html"><i class="fa-solid fa-store"></i><span data-i18n="navMarket">Market</span></a></li>
+                <li class="nav-item active"><a href="/crop.html"><i class="fa-solid fa-seedling"></i><span data-i18n="navCrops">Crops</span></a></li>
+                <li class="nav-item"><a href="/chat.html"><i class="fa-solid fa-comments"></i><span data-i18n="navAIChat">AI Chat</span></a></li>
+                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span data-i18n="navProfile">Profile</span></a></li>
+                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="navLogout">Logout</span></a></li>
+                <div class="nav-indicator"></div>
+            </ul>
+        </nav>
+    </aside>
+    <script src="/i18n.js" defer></script>
+    <script src="/crop.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Crop Market | Glassmorphism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="has-side-nav">
+    <video autoplay muted loop id="bg-video">
+        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758532387/background_video_nx9nfc.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <main class="profile-page-container">
+        <div class="profile-card">
+            <h2 id="market-location-title">Today's Crop Market</h2>
+            <div id="market-data-container">
+                <p>Fetching your location to get local market prices...</p>
+            </div>
+        </div>
+    </main>
+
+ <aside class="side-navbar">
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="/home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li class="nav-item active"><a href="/market.html"><i class="fa-solid fa-store"></i><span>Market</span></a></li>
+                <li class="nav-item"><a href="/crop.html"><i class="fa-solid fa-seedling"></i><span>Crops</span></a></li>
+                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span>Profile</span></a></li>
+                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+                <div class="nav-indicator"></div>
+            </ul>
+        </nav>
+    </aside>
+    <script src="/market.js" defer></script>
+</body>
+</html>

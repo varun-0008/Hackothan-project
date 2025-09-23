@@ -88,10 +88,80 @@ body {
 }
 
 .input-group input:focus {
-    border-color: #a77eff; /* Highlight color on focus */
-    box-shadow: 0 0 15px rgba(167, 126, 255, 0.7); /* Glowing animation */
+    border-color: #228B22; /* Highlight color on focus */
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.7); /* Glowing animation */
 }
 
+/* Style for select dropdowns to match inputs */
+.input-group select {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 20px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-appearance: none; /* Remove default arrow on Chrome/Safari */
+    -moz-appearance: none; /* Remove default arrow on Firefox */
+    appearance: none;
+}
+
+.input-group select option { background-color: #228B22; color: #fff; } /* Dropdown option background */
+
+/* Add custom arrow for select dropdowns */
+.input-group:has(select)::after {
+    content: '\f078'; /* Font Awesome down arrow icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #fff;
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+/* Change arrow color on focus to match border */
+.input-group:has(select:focus)::after {
+    color: #228B22;
+}
+
+.input-group select:focus {
+    border-color: #228B22;
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.7);
+}
+/* Animate label for select dropdowns */
+.input-group select:focus + label,
+.input-group select:valid + label {
+    top: -10px;
+    font-size: 12px;
+    color: #eee;
+}
+
+/* Keep labels for date inputs always floated to prevent overlap */
+.input-group input[type="date"] + label {
+    top: -10px;
+    font-size: 12px;
+    color: #eee;
+}
+
+/* Style the date picker indicator to be visible */
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Animate label for select dropdowns */
+.input-group select:focus + label,
+.input-group select:valid + label {
+    top: -10px;
+    font-size: 12px;
+    color: #eee;
+}
 /* Options like "Forgot Password" */
 .options {
     display: flex;
@@ -126,7 +196,7 @@ button {
 }
 
 button:hover {
-    background-color: #a77eff;
+    background-color: #228B22;
     color: #fff;
 }
 
@@ -147,6 +217,56 @@ button:hover {
     text-decoration: underline;
 }
 
+/* --- Mobile Input Specific Styles --- */
+
+/* The main container for the mobile input, styled to look like a single input field */
+.input-group.mobile-input-container {
+    display: flex;
+    align-items: center;
+    padding: 0; /* Remove padding from the group itself */
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Apply focus styles to the whole container when the input inside is focused */
+.input-group.mobile-input-container:focus-within {
+    border-color: #228B22;
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.7);
+}
+
+/* Style for the '+91' country code */
+.mobile-input-container .country-code {
+    padding-left: 20px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* A wrapper for the input and its floating label */
+.mobile-input-container .input-wrapper {
+    position: relative;
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* The actual mobile number input field, with borders removed */
+.mobile-input-container input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 20px 0 10px; /* top right bottom left */
+}
+
+/* Position the label correctly inside the wrapper */
+.mobile-input-container .input-wrapper label {
+    left: 10px; /* Match the input's left padding */
+}
 /* --- Home Page Styles: iOS Inspired --- */
 
 /* Bottom Navbar Container */
@@ -207,7 +327,7 @@ button:hover {
     position: absolute;
     top: 0;
     height: 100%;
-    background-color: #a77eff;
+    background-color: #228B22;
     border-radius: 50px;
     z-index: 1;
     transition: all 0.35s ease-in-out; /* Smoother transition */
@@ -237,6 +357,80 @@ button:hover {
     line-height: 1.6;
 }
 
+/* --- Widget Grid Styles (for home page) --- */
+.widget-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 90vw;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.widget-card {
+    /* Re-using the glassmorphism effect from profile-card */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 20px;
+    padding: 25px 30px;
+    min-height: 150px;
+}
+
+.widget-card h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.weather-widget #weather-info { text-align: center; }
+.weather-main { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 10px; }
+.weather-icon { font-size: 48px; }
+.weather-temp { font-size: 52px; font-weight: 600; }
+.weather-desc { font-size: 16px; opacity: 0.9; }
+.fa-spinner { font-size: 36px; }
+.weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.weather-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-detail-item i {
+    width: 16px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.language-selection-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.language-selection-group .input-group {
+    flex-grow: 1;
+    margin: 0; /* Reset margin from default .input-group */
+}
+
+.language-selection-group button {
+    flex-shrink: 0; /* Prevent button from shrinking */
+    width: auto;
+    padding: 0 25px;
+    height: 50px; /* Match input height */
+}
+
+
 /* --- Profile Page Specific Styles --- */
 .profile-page-container {
     display: flex;
@@ -263,8 +457,53 @@ button:hover {
     padding-bottom: 10px;
 }
 
+.profile-details p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.profile-details p:last-child {
+    margin-bottom: 0;
+}
+
+.profile-details span {
+    opacity: 0.9;
+}
+
 .profile-card p {
     line-height: 1.6;
+}
+
+#ai-feedback-box {
+    text-align: left;
+    line-height: 1.7;
+    opacity: 0.9;
+    white-space: pre-wrap; /* Respect newlines and spaces in the AI response */
+}
+
+.market-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.market-table th, .market-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.market-table th {
+    font-weight: 600;
+    color: #228B22;
+}
+
+.market-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.market-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .danger-zone {
@@ -291,11 +530,17 @@ button:hover {
 .form-message.error { color: #ff9a9a; }
 .form-message.success { color: #a7ffba; }
 
+.form-message.ai-feedback {
+    text-align: left;
+    line-height: 1.6;
+}
+
 /* --- Side Navbar Styles (for Profile, etc.) --- */
 
 /* Add padding to the body to make space for the side nav */
 body.has-side-nav {
     padding-left: 120px;
+    overflow: auto; /* Allow scrolling on pages with side nav */
 }
 
 .side-navbar {
@@ -327,3 +572,55 @@ body.has-side-nav {
     left: 0;
     width: 100%;
 }
+
+/* --- Chat Page Styles --- */
+.chat-card {
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Make card taller */
+    max-height: 700px;
+}
+
+.chat-window {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-message {
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.5;
+}
+
+.user-message {
+    background-color: #228B22;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.ai-message {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-input-form .input-group {
+    display: flex;
+    align-items: center;
+}
+
+.chat-input-form input { border-radius: 40px 0 0 40px; }
+.chat-btn {
+    height: 50px; width: 50px; padding: 0;
+    border-radius: 0; background: transparent; color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5); border-left: none;
+}
+.chat-btn:last-child { border-radius: 0 40px 40px 0; }
+.chat-btn.listening { color: #228B22; }

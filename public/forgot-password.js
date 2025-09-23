@@ -12,13 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.textContent = 'Sending...';
 
         try {
-            const email = document.getElementById('email').value.trim();
+            const identifier = document.getElementById('identifier').value.trim();
 
             // Step 1: Ask our secure backend to generate a reset token
             const serverResponse = await fetch('/api/forgot-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ identifier }),
             });
 
             if (!serverResponse.ok) {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (serverData.success && serverData.token) {
                 const resetLink = `http://localhost:3000/reset-password.html?token=${serverData.token}`;
                 const templateParams = {
-                    to_email: email, // This is sent to the user's email address
+                    to_email: serverData.email, // The server returns the email associated with the identifier
                     reset_link: resetLink,
                     reply_to: 'noreply@yourapp.com' // This sets the reply-to address
                 };

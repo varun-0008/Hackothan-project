@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Profile Page Specific Logic ---
     const usernameEl = document.getElementById('profile-username');
     const emailEl = document.getElementById('profile-email');
+    const mobileEl = document.getElementById('profile-mobile');
+
     const passwordForm = document.getElementById('change-password-form');
     const passwordMessageEl = document.getElementById('password-message');
     const deleteBtn = document.getElementById('delete-account-btn');
@@ -31,14 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display user profile data
     fetch('/api/user/profile')
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) window.location.href = '/index.html';
+                return res.json().then(err => Promise.reject(err));
+            }
+            return res.json();
+        })
         .then(data => {
             if (data.success) {
-                usernameEl.textContent = data.username;
-                emailEl.textContent = data.email;
+                usernameEl.textContent = data.user.username;
+                emailEl.textContent = data.user.email;
+                mobileEl.textContent = data.user.mobile || 'Not set'; // Handle null mobile numbers
             } else {
-                usernameEl.textContent = 'Error';
-                emailEl.textContent = 'Error';
+                alert('Could not load profile data: ' + data.message);
             }
         });
 

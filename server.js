@@ -7,13 +7,15 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const crypto = require('crypto');
+const axios = require('axios');
 
 const app = express();
 const port = 3000;
 const saltRounds = 10; // Cost factor for hashing
 
 // You can now securely access your API key like this:
-const googleApiKey = process.env.GOOGLE_API_KEY;
+const weatherApiKey = "729cb632096643bf91684003252209"; // For weatherapi.com
+const aiApiKey = "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"; // For AI services (OpenRouter, etc.)
 
 // --- Middleware ---
 app.use(express.json()); // To parse JSON request bodies from fetch
@@ -66,27 +68,226 @@ app.get('/profile.html', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
+// Serve market.html only if authenticated
+app.get('/market.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'market.html'));
+});
+
+// Serve crop.html only if authenticated
+app.get('/crop.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'crop.html'));
+});
+
+// Serve chat.html only if authenticated
+app.get('/chat.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'chat.html'));
+});
+
+// --- Mock Market Data Function ---
+const getMockMarketData = (location) => {
+    const basePrices = {
+        'Wheat': 2150,
+        'Rice': 3600,
+        'Cotton': 7800,
+        'Sugarcane': 320,
+        'Soybean': 4900,
+    };
+
+    // Simulate slightly different prices for different locations
+    let locationMultiplier = 1.0;
+    if (location === 'Maharashtra') {
+        locationMultiplier = 1.02;
+    } else if (location === 'Telangana') {
+        locationMultiplier = 1.05; // Cotton and Rice are important here
+    } else { // Karnataka
+        locationMultiplier = 0.98;
+    }
+
+    const marketData = Object.entries(basePrices).map(([commodity, price]) => {
+        const finalPrice = Math.round(price * locationMultiplier + (Math.random() - 0.5) * 50);
+        return { commodity, price: finalPrice };
+    });
+
+    return { location, data: marketData };
+};
+
 // --- API Endpoints ---
+
+// Weather API Endpoint
+app.get('/api/weather', isAuthenticated, async (req, res) => {
+    const { lat, lon } = req.query;
+    if (!lat || !lon) {
+        return res.status(400).json({ success: false, message: 'Latitude and Longitude are required.' });
+    }
+
+    if (!weatherApiKey) {
+        return res.status(500).json({ success: false, message: 'Weather API key is not configured on the server.' });
+    }
+
+    try {
+        const weatherApiUrl = `http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${lat},${lon}`;
+        const response = await axios.get(weatherApiUrl);
+        res.json({ success: true, weather: response.data }); // Forward the weatherapi.com response
+    } catch (error) {
+        console.error('Error fetching weather data:', error.response ? error.response.data : error.message);
+        res.status(500).json({ success: false, message: 'Failed to fetch weather data.' });
+    }
+});
+
+// Market Data Endpoint
+app.get('/api/market-data', isAuthenticated, async (req, res) => {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        return res.status(400).json({ success: false, message: 'Latitude and Longitude are required.' });
+    }
+
+    try {
+        // In a real app, you would use a geocoding service with your API key.
+        // For this example, we'll simulate a location based on latitude.
+        let location = 'Karnataka'; // Default
+        const latitude = parseFloat(lat);
+        if (latitude > 19) {
+            location = 'Maharashtra';
+        } else if (latitude > 16) {
+            location = 'Telangana';
+        }
+
+        const marketData = getMockMarketData(location);
+        res.json({ success: true, marketData });
+    } catch (error) {
+        console.error('Error fetching market data:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch market data.' });
+    }
+});
+
+// AI Feedback Endpoint
+app.post('/api/crop-feedback', isAuthenticated, async (req, res) => {
+    const {
+        cropName,
+        variety,
+        sowingDate,
+        harvestDate,
+        landArea,
+        soilType,
+        irrigationMethod
+    } = req.body.formData;
+    const language = req.body.language || 'English';
+
+    if (!cropName || !soilType) {
+        return res.status(400).json({ success: false, message: 'Crop name and soil type are required for feedback.' });
+    }
+
+    if (!aiApiKey) {
+        return res.status(500).json({ success: false, message: 'AI API key is not configured on the server.' });
+    }
+
+    const prompt = `
+        As an expert agricultural advisor, provide brief feedback and suggestions for the following crop plan in India. Respond in ${language}.
+        Keep the feedback concise, using bullet points for suggestions.
+
+        Crop Plan:
+        - Crop: ${cropName}
+        - Variety: ${variety || 'Not specified'}
+        - Sowing Date: ${sowingDate || 'Not specified'}
+        - Expected Harvest Date: ${harvestDate || 'Not specified'}
+        - Land Area: ${landArea || 'Not specified'} acres
+        - Soil Type: ${soilType}
+        - Irrigation Method: ${irrigationMethod}
+
+        Provide feedback on the suitability of the crop for the soil, timing, and suggest any potential improvements or things to watch out for.
+    `;
+
+    try {
+        const openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
+        const headers = {
+            'Authorization': `Bearer ${aiApiKey}`,
+            'HTTP-Referer': `http://localhost:${port}`, // Required by some providers like OpenRouter
+            'X-Title': 'Farmer AI App' // Optional, for identification
+        };
+        const data = {
+            model: "mistralai/mistral-7b-instruct:free", // Using a free model from OpenRouter
+            messages: [
+                { "role": "user", "content": prompt }
+            ]
+        };
+
+        const apiResponse = await axios.post(openRouterUrl, data, { headers });
+
+        if (!apiResponse.data.choices || apiResponse.data.choices.length === 0) {
+            console.error('AI API returned no choices.');
+            return res.status(500).json({ success: false, message: 'The AI assistant returned an empty response.' });
+        }
+
+        const feedback = apiResponse.data.choices[0].message.content;
+        res.json({ success: true, feedback });
+    } catch (error) {
+        console.error('Error calling AI API:', error.response ? error.response.data : error.message);
+        res.status(500).json({ success: false, message: 'Failed to get feedback from AI assistant.' });
+    }
+});
+
+// AI Chat Endpoint
+app.post('/api/chat', isAuthenticated, async (req, res) => {
+    const { message, language } = req.body;
+    const lang = language || 'English';
+
+    if (!message) {
+        return res.status(400).json({ success: false, message: 'Message is required.' });
+    }
+
+    if (!aiApiKey) {
+        return res.status(500).json({ success: false, message: 'AI API key is not configured on the server.' });
+    }
+
+    const prompt = `You are an expert agricultural assistant for Indian farmers. Your goal is to provide helpful, concise, and practical advice. Answer the following user query in ${lang}: "${message}"`;
+
+    try {
+        const openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
+        const headers = {
+            'Authorization': `Bearer ${aiApiKey}`,
+            'HTTP-Referer': `http://localhost:${port}`,
+            'X-Title': 'Farmer AI App'
+        };
+        const data = {
+            model: "mistralai/mistral-7b-instruct:free",
+            messages: [
+                { "role": "user", "content": prompt }
+            ]
+        };
+        const apiResponse = await axios.post(openRouterUrl, data, { headers });
+
+        if (!apiResponse.data.choices || apiResponse.data.choices.length === 0) {
+            return res.status(500).json({ success: false, message: 'The AI assistant returned an empty response.' });
+        }
+
+        const reply = apiResponse.data.choices[0].message.content;
+        res.json({ success: true, reply });
+    } catch (error) {
+        console.error('Error calling AI API for chat:', error.response ? error.response.data : error.message);
+        res.status(500).json({ success: false, message: 'Failed to get a response from the AI assistant.' });
+    }
+});
 
 // Signup Endpoint
 app.post('/api/signup', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, mobile, password } = req.body;
 
-    if (!username || !email || !password) {
-        return res.status(400).json({ success: false, message: 'Username, email, and password are required.' });
+    if (!username || !email || !mobile || !password) {
+        return res.status(400).json({ success: false, message: 'Username, email, mobile number, and password are required.' });
     }
 
     try {
         const hash = await bcrypt.hash(password, saltRounds);
-        const sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+        const sql = 'INSERT INTO users (username, email, mobile, password) VALUES (?, ?, ?, ?)';
         
         // Use a Promise wrapper for db.run to use async/await
         await new Promise((resolve, reject) => {
-            db.run(sql, [username, email, hash], function(err) {
+            db.run(sql, [username, email, mobile, hash], function(err) {
                 if (err) {
                     // More specific error for UNIQUE constraint
                     if (err.code === 'SQLITE_CONSTRAINT') {
-                        return reject({ status: 409, message: 'Username or email already taken.' });
+                        return reject({ status: 409, message: 'Username, email, or mobile number already taken.' });
                     }
                     return reject({ status: 500, message: 'Database error during signup.' });
                 }
@@ -105,15 +306,15 @@ app.post('/api/login', async (req, res) => {
     const { loginIdentifier, password } = req.body;
 
     if (!loginIdentifier || !password) {
-        return res.status(400).json({ success: false, message: 'Username/email and password are required.' });
+        return res.status(400).json({ success: false, message: 'Identifier (username, email, or mobile) and password are required.' });
     }
 
     try {
-        const sql = 'SELECT * FROM users WHERE username = ? OR email = ?';
+        const sql = 'SELECT * FROM users WHERE username = ? OR email = ? OR mobile = ?';
         
         // Use a Promise wrapper for db.get
         const user = await new Promise((resolve, reject) => {
-            db.get(sql, [loginIdentifier, loginIdentifier], (err, row) => {
+            db.get(sql, [loginIdentifier, loginIdentifier, loginIdentifier], (err, row) => {
                 if (err) reject({ status: 500, message: 'Database error during login.' });
                 resolve(row);
             });
@@ -142,10 +343,10 @@ app.post('/api/login', async (req, res) => {
 
 // 1. Forgot Password: Generate and "send" a reset token
 app.post('/api/forgot-password', async (req, res) => {
-    const { email } = req.body;
+    const { identifier } = req.body; // Can be email or mobile
     try {
         const user = await new Promise((resolve, reject) => {
-            db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
+            db.get('SELECT id, email FROM users WHERE email = ? OR mobile = ?', [identifier, identifier], (err, row) => {
                 if (err) reject({ status: 500, message: 'Database error.' });
                 resolve(row);
             });
@@ -164,11 +365,11 @@ app.post('/api/forgot-password', async (req, res) => {
             });
 
             // Return the token to the client so it can send the email
-            return res.json({ success: true, token: token, message: 'If an account with that email exists, a password reset link will be sent.' });
+            return res.json({ success: true, token: token, email: user.email, message: 'If an account exists, a password reset link will be sent to the registered email.' });
         }
 
         // Always send a generic success message to prevent username enumeration
-        res.json({ success: true, message: 'If an account with that email exists, a password reset link has been generated.' });
+        res.json({ success: true, message: 'If an account exists, a password reset link has been generated.' });
 
     } catch (error) {
         res.status(error.status || 500).json({ success: false, message: error.message });
@@ -202,9 +403,53 @@ app.post('/api/reset-password', async (req, res) => {
 });
 
 // Get User Profile Endpoint
-app.get('/api/user/profile', isAuthenticated, (req, res) => {
-    // Send back non-sensitive user data from the session
-    res.json({ success: true, username: req.session.user.username, email: req.session.user.email });
+app.get('/api/user/profile', isAuthenticated, async (req, res) => {
+    const { id } = req.session.user;
+    try {
+        const user = await new Promise((resolve, reject) => {
+            db.get('SELECT id, username, email, mobile FROM users WHERE id = ?', [id], (err, row) => {
+                if (err) reject({ status: 500, message: 'Database error.' });
+                resolve(row);
+            });
+        });
+
+        if (user) {
+            res.json({ success: true, user });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found.' });
+        }
+    } catch (error) {
+        res.status(error.status || 500).json({ success: false, message: error.message });
+    }
+});
+
+// Update User Profile Endpoint
+app.put('/api/user/profile', isAuthenticated, async (req, res) => {
+    const { username, email, mobile } = req.body;
+    const { id } = req.session.user;
+
+    if (!username || !email || !mobile) {
+        return res.status(400).json({ success: false, message: 'Username, email, and mobile are required.' });
+    }
+
+    try {
+        const sql = 'UPDATE users SET username = ?, email = ?, mobile = ? WHERE id = ?';
+        await new Promise((resolve, reject) => {
+            db.run(sql, [username, email, mobile, id], function(err) {
+                if (err) {
+                    if (err.code === 'SQLITE_CONSTRAINT') {
+                        return reject({ status: 409, message: 'Username, email, or mobile already in use.' });
+                    }
+                    return reject({ status: 500, message: 'Error updating profile.' });
+                }
+                resolve();
+            });
+        });
+
+        res.json({ success: true, message: 'Profile updated successfully.' });
+    } catch (error) {
+        res.status(error.status || 500).json({ success: false, message: error.message });
+    }
 });
 
 // Change Password Endpoint

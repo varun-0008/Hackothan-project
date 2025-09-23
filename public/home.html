@@ -9,29 +9,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="has-side-nav">
     <video autoplay muted loop id="bg-video">
-        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758452452/bubbleLoop_v7jqn8.mp4" type="video/mp4">
+        <source src="https://res.cloudinary.com/ddfgak9zl/video/upload/v1758532387/background_video_nx9nfc.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <main class="content-container">
-        <h1>Welcome Home</h1>
-        <p>This is your personalized dashboard. The glassmorphism theme is consistent across the application, providing a modern and sleek user experience.</p>
-        <p>The navigation bar below is styled after modern mobile OS designs, featuring a floating glass effect and an interactive indicator.</p>
+    <main class="widget-grid-container">
+        <!-- Weather Widget -->
+        <div class="widget-card weather-widget">
+            <h2 data-i18n="currentWeather">Current Weather</h2>
+            <div id="weather-info">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p data-i18n="loadingWeather">Loading weather...</p>
+            </div>
+        </div>
+
+        <!-- Kharif Season Widget -->
+        <div class="widget-card">
+            <h2 data-i18n="kharifSeason">Kharif Season</h2>
+            <p data-i18n="kharifDescription">Monsoon crops sown at the beginning of the rains (June-July). Major crops include Rice, Maize, and Cotton. They require warm, wet weather.</p>
+        </div>
+
+        <!-- Rabi Season Widget -->
+        <div class="widget-card">
+            <h2 data-i18n="rabiSeason">Rabi Season</h2>
+            <p data-i18n="rabiDescription">Winter crops sown in October-December. They require cool weather for growth. Major crops include Wheat, Barley, and Mustard.</p>
+        </div>
+
+        <!-- Zaid Season Widget -->
+        <div class="widget-card">
+            <h2 data-i18n="zaidSeason">Zaid Season</h2>
+            <p data-i18n="zaidDescription">Summer crops grown between Rabi and Kharif seasons (March-June). These are short-duration crops like Watermelon, Cucumber, and leafy vegetables.</p>
+        </div>
+
+        <!-- Fruit Irrigation Widget -->
+        <div class="widget-card">
+            <h2 data-i18n="fruitIrrigation">Fruit Irrigation</h2>
+            <p data-i18n="fruitIrrigationDescription">Drip irrigation is highly efficient for fruit orchards, delivering water directly to the root zone. This conserves water and minimizes weed growth.</p>
+        </div>
+
+        <!-- Language Selection Widget -->
+        <div class="widget-card">
+            <h2 data-i18n="language">Language</h2>
+            <p data-i18n="selectLanguage">Select your preferred language.</p>
+            <div class="language-selection-group">
+                <div class="input-group">
+                    <select id="language-selector">
+                        <option value="en">English</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                    </select>
+                    <label for="language-selector" data-i18n="language">Language</label>
+                </div>
+                <button id="change-language-btn" data-i18n="changeLanguage">Change</button>
+            </div>
+        </div>
     </main>
 
-    <footer class="bottom-navbar">
+    <aside class="side-navbar">
         <nav>
             <ul class="nav-links">
-                <li class="nav-item active"><a href="/home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span>Profile</span></a></li>
-                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+                <li class="nav-item active"><a href="/home.html"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a></li>
+                <li class="nav-item"><a href="/market.html"><i class="fa-solid fa-store"></i><span data-i18n="navMarket">Market</span></a></li>
+                <li class="nav-item"><a href="/chat.html"><i class="fa-solid fa-comments"></i><span data-i18n="navAIChat">AI Chat</span></a></li>
+                <li class="nav-item"><a href="/crop.html"><i class="fa-solid fa-seedling"></i><span data-i18n="navCrops">Crops</span></a></li>
+                <li class="nav-item"><a href="/profile.html"><i class="fa-solid fa-user"></i><span data-i18n="navProfile">Profile</span></a></li>
+                <li class="nav-item"><a href="#" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="navLogout">Logout</span></a></li>
                 <div class="nav-indicator"></div>
             </ul>
         </nav>
-    </footer>
+    </aside>
 
+    <script src="/i18n.js" defer></script>
     <script src="/home.js" defer></script>
 </body>
 </html>

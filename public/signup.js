@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('username').value.trim();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
+        const mobile = document.getElementById('mobile').value.trim();
         const confirmPassword = document.getElementById('confirm-password').value.trim();
 
         // Validation checks
-        if (username === '' || email === '' || password === '' || confirmPassword === '') {
+        if (username === '' || email === '' || mobile === '' || password === '' || confirmPassword === '') {
             alert('Please fill in all fields.');
             return;
         }
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username, email, mobile, password }),
         })
         .then(res => res.json())
         .then(data => {
